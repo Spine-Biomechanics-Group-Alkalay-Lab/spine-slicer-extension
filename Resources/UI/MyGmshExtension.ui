@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MyGmshExtension</class>
+ <widget class="qMRMLWidget" name="MyGmshExtension">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>425</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <!-- SECTION 1: Spine Selection -->
+   <item>
+    <widget class="ctkCollapsibleButton" name="spineSelectionCollapsibleButton">
+     <property name="text">
+      <string>Spine Level Selection</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_1">
+      <item row="0" column="0">
+       <widget class="QLabel" name="spineLevelsLabel">
+        <property name="text">
+         <string>Number of Spine Levels:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QSpinBox" name="spineLevelsSpinBox">
+        <property name="toolTip">
+         <string>Select number of spine levels to analyze (1-24)</string>
+        </property>
+        <property name="minimum">
+         <number>1</number>
+        </property>
+        <property name="maximum">
+         <number>24</number>
+        </property>
+        <property name="value">
+         <number>3</number>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QScrollArea" name="spineInputScrollArea">
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <layout class="QVBoxLayout" name="spineInputsLayout">
+          <!-- Spine input selectors will be populated dynamically -->
+          <item>
+           <layout class="QFormLayout" name="spine1Layout">
+            <item row="0" column="0">
+             <widget class="QLabel" name="inputVolume1Label">
+              <property name="text">
+               <string>Input Volume 1:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <widget class="qMRMLNodeComboBox" name="inputVolumeSelector1">
+              <property name="toolTip">
+               <string>Select input VTK model for level 1</string>
+              </property>
+              <property name="nodeTypes">
+               <stringlist notr="true">
+                <string>vtkMRMLModelNode</string>
+               </stringlist>
+              </property>
+              <property name="showChildNodeTypes">
+               <bool>false</bool>
+              </property>
+              <property name="addEnabled">
+               <bool>false</bool>
+              </property>
+              <property name="removeEnabled">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <!-- Additional spine inputs will be added dynamically -->
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   
+   <!-- SECTION 2: Meshing Settings -->
+   <item>
+    <widget class="ctkCollapsibleButton" name="meshingCollapsibleButton">
+     <property name="text">
+      <string>Meshing Settings</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2">
+      <item row="0" column="0">
+        <widget class="QLabel" name="sizeControlLabel">
+          <property name="text">
+            <string>Size Control:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="0" column="1">
+        <widget class="QComboBox" name="sizeControlComboBox">
+          <property name="toolTip">
+            <string>Choose between element size or target number of elements</string>
+          </property>
+          <item>
+            <property name="text">
+              <string>Element Size</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>Number of Elements</string>
+            </property>
+          </item>
+        </widget>
+      </item>
+      <item row="1" column="0">
+        <widget class="QLabel" name="elementSizeLabel">
+          <property name="text">
+            <string>Element Size:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="1">
+        <widget class="QDoubleSpinBox" name="elementSizeSpinBox">
+          <property name="toolTip">
+            <string>Set the element size for meshing</string>
+          </property>
+          <property name="minimum">
+            <double>0.1</double>
+          </property>
+          <property name="maximum">
+            <double>10.0</double>
+          </property>
+          <property name="singleStep">
+            <double>0.1</double>
+          </property>
+          <property name="value">
+            <double>1.0</double>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="0">
+        <widget class="QLabel" name="numElementsLabel">
+          <property name="text">
+            <string>Number of Elements:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="1">
+        <widget class="QSpinBox" name="numElementsSpinBox">
+          <property name="toolTip">
+            <string>Set target number of elements</string>
+          </property>
+          <property name="minimum">
+            <number>100</number>
+          </property>
+          <property name="maximum">
+            <number>1000000</number>
+          </property>
+          <property name="value">
+            <number>10000</number>
+          </property>
+        </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="optimizeNetgenLabel">
+        <property name="text">
+         <string>Optimize Netgen:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QCheckBox" name="optimizeNetgenCheckBox">
+        <property name="toolTip">
+         <string>Enable Netgen optimization</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+        <widget class="QLabel" name="ctVolumeLabel">
+          <property name="text">
+          <string>CT Volume:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="4" column="1">
+        <widget class="qMRMLNodeComboBox" name="ctVolumeSelector">
+          <property name="toolTip">
+          <string>Select input CT volume (.nii.gz)</string>
+          </property>
+          <property name="nodeTypes">
+          <stringlist notr="true">
+            <string>vtkMRMLScalarVolumeNode</string>
+          </stringlist>
+          </property>
+          <property name="showChildNodeTypes">
+          <bool>false</bool>
+          </property>
+          <property name="addEnabled">
+          <bool>false</bool>
+          </property>
+          <property name="removeEnabled">
+          <bool>false</bool>
+          </property>
+        </widget>
+      </item>
+      <item row="5" column="0">
+        <widget class="QLabel" name="intervertebralDiscsLabel">
+          <property name="text">
+            <string>Include Intervertebral Discs:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="5" column="1">
+        <widget class="QCheckBox" name="intervertebralDiscsCheckBox">
+          <property name="toolTip">
+            <string>Include intervertebral discs in the model</string>
+          </property>
+          <property name="checked">
+            <bool>true</bool>
+          </property>
+        </widget>
+      </item>
+      <item row="6" column="0">
+        <widget class="QLabel" name="annulusLayersLabel">
+          <property name="text">
+            <string>Annulus Layers:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="6" column="1">
+        <widget class="QSpinBox" name="annulusLayersSpinBox">
+          <property name="toolTip">
+            <string>Number of annulus layers (7 recommended)</string>
+          </property>
+          <property name="minimum">
+            <number>1</number>
+          </property>
+          <property name="maximum">
+            <number>10</number>
+          </property>
+          <property name="value">
+            <number>7</number>
+          </property>
+          <property name="suffix">
+            <string> (7 recommended)</string>
+          </property>
+        </widget>
+      </item>
+      <item row="7" column="0" colspan="2">
+       <widget class="QPushButton" name="runMeshingButton">
+        <property name="toolTip">
+         <string>Generate the mesh based on current settings</string>
+        </property>
+        <property name="text">
+         <string>Run Meshing</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   
+   <!-- NEW SECTION: Mesh Quality Analysis -->
+   <item>
+    <widget class="ctkCollapsibleButton" name="meshQualityCollapsibleButton">
+     <property name="text">
+      <string>Mesh Quality Analysis</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_quality">
+      <item row="0" column="0">
+        <widget class="QLabel" name="meshQualityLabel">
+          <property name="text">
+            <string>Mesh Quality Metrics:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="0">
+        <widget class="QPushButton" name="edgeLengthHistogramButton">
+          <property name="toolTip">
+            <string>Generate and download histogram of tetrahedral edge lengths</string>
+          </property>
+          <property name="text">
+            <string>Edge Length Histogram</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="1">
+        <widget class="QPushButton" name="saveEdgeLengthHistogramButton">
+          <property name="toolTip">
+            <string>Save edge length histogram as PNG</string>
+          </property>
+          <property name="text">
+            <string>Save Image</string>
+          </property>
+          <property name="icon">
+            <iconset>
+              <normaloff>:/Icons/Small/SlicerSave.png</normaloff>:/Icons/Small/SlicerSave.png
+            </iconset>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="0">
+        <widget class="QPushButton" name="aspectRatioHistogramButton">
+          <property name="toolTip">
+            <string>Generate and download histogram of tetrahedral aspect ratios</string>
+          </property>
+          <property name="text">
+            <string>Aspect Ratio Histogram</string>
+          </property>
+        </widget>
+      </item>
+      <item row="2" column="1">
+        <widget class="QPushButton" name="saveAspectRatioHistogramButton">
+          <property name="toolTip">
+            <string>Save aspect ratio histogram as PNG</string>
+          </property>
+          <property name="text">
+            <string>Save Image</string>
+          </property>
+          <property name="icon">
+            <iconset>
+              <normaloff>:/Icons/Small/SlicerSave.png</normaloff>:/Icons/Small/SlicerSave.png
+            </iconset>
+          </property>
+        </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+        <widget class="QLabel" name="meshStatsLabel">
+          <property name="text">
+            <string>Mesh Statistics:</string>
+          </property>
+          <property name="font">
+            <font>
+              <weight>75</weight>
+              <bold>true</bold>
+            </font>
+          </property>
+        </widget>
+      </item>
+      <item row="4" column="0" colspan="2">
+        <widget class="QTextBrowser" name="meshStatsTextBrowser">
+          <property name="minimumSize">
+            <size>
+              <width>0</width>
+              <height>80</height>
+            </size>
+          </property>
+          <property name="maximumSize">
+            <size>
+              <width>16777215</width>
+              <height>80</height>
+            </size>
+          </property>
+          <property name="readOnly">
+            <bool>true</bool>
+          </property>
+        </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   
+   <!-- SECTION 3: Material Property Assignment -->
+   <item>
+    <widget class="ctkCollapsibleButton" name="materialPropertiesCollapsibleButton">
+     <property name="text">
+      <string>Material Property Assignment</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_3">
+      <item row="0" column="0">
+        <widget class="QLabel" name="voxelResolutionLabel">
+          <property name="text">
+            <string>Voxel Subdivision:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="0" column="1">
+        <widget class="QComboBox" name="voxelResolutionComboBox">
+          <property name="toolTip">
+            <string>Select how many cubes each voxel should be split into</string>
+          </property>
+          <item>
+            <property name="text">
+              <string>2x2x2</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>3x3x3</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>4x4x4</string>
+            </property>
+          </item>
+          <item>
+            <property name="text">
+              <string>5x5x5</string>
+            </property>
+          </item>
+        </widget>
+      </item>
+      <item row="1" column="0" colspan="2">
+       <widget class="QPushButton" name="runMaterialAssignmentButton">
+        <property name="toolTip">
+         <string>Assign material properties to the mesh</string>
+        </property>
+        <property name="text">
+         <string>Run Material Property Assignment</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   
+   <!-- SECTION 4: Export / Analysis -->
+   <item>
+    <widget class="ctkCollapsibleButton" name="exportCollapsibleButton">
+     <property name="text">
+      <string>Export / Analysis</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_4">
+      <item row="0" column="0">
+       <widget class="QLabel" name="outputDirectoryLabel">
+        <property name="text">
+         <string>Output Directory:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="ctkDirectoryButton" name="outputDirectorySelector">
+        <property name="toolTip">
+          <string>Select output directory for exported files</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+        <widget class="QLabel" name="exportFormatLabel">
+          <property name="text">
+            <string>Export Format:</string>
+          </property>
+        </widget>
+      </item>
+      <item row="1" column="1">
+        <widget class="QComboBox" name="exportFormatComboBox">
+          <property name="toolTip">
+            <string>Select the parser for exporting data</string>
+          </property>
+          <item>
+            <property name="text">
+              <string>ABAQUS</string>
+            </property>
+          </item>
+          <!-- Future formats can be added here -->
+        </widget>
+      </item>
+      <item row="2" column="0" colspan="2">
+        <widget class="QCheckBox" name="runFEASofaCheckBox">
+          <property name="text">
+            <string>Run FEA in Slicer using SOFA</string>
+          </property>
+          <property name="toolTip">
+            <string>Enable to run Finite Element Analysis natively in Slicer using SOFA</string>
+          </property>
+        </widget>
+      </item>
+      <item row="3" column="0" colspan="2">
+       <widget class="QPushButton" name="runExportButton">
+        <property name="toolTip">
+         <string>Export the mesh and material properties</string>
+        </property>
+        <property name="text">
+         <string>Run Export</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   
+   <item>
+    <spacer name="verticalSpacer">
+     <property name="orientation">
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qMRMLNodeComboBox</class>
+   <extends>QWidget</extends>
+   <header>qMRMLNodeComboBox.h</header>
+  </customwidget>
+  <customwidget>
+   <class>qMRMLWidget</class>
+   <extends>QWidget</extends>
+   <header>qMRMLWidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ctkCollapsibleButton</class>
+   <extends>QWidget</extends>
+   <header>ctkCollapsibleButton.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ctkDirectoryButton</class>
+   <extends>QWidget</extends>
+   <header>ctkDirectoryButton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>ctkPathLineEdit</class>
+   <extends>QWidget</extends>
+   <header>ctkPathLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>MyGmshExtension</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>inputVolumeSelector1</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MyGmshExtension</sender>
+   <signal>mrmlSceneChanged(vtkMRMLScene*)</signal>
+   <receiver>ctVolumeSelector</receiver>
+   <slot>setMRMLScene(vtkMRMLScene*)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>122</x>
+     <y>132</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>intervertebralDiscsCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>annulusLayersLabel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>intervertebralDiscsCheckBox</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>annulusLayersSpinBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>248</x>
+     <y>61</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>
